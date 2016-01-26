@@ -1,4 +1,4 @@
 #!/bin/sh
 
-./src/scanner.Alex < $1
+./scanner.Alex < $1
 
