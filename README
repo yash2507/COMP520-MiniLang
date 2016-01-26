@@ -1,16 +1,32 @@
 Name     -  Yash Gupta
 ID       -  260574028
 
-Scanner Commmands make:
+Commmands to make the Scanner:
+(If making directly from the Scanner.x Alex file)
+
+alex --ghc Scanner.x 
+ghc -fno-warn-tabs Scanner.hs
+
+(Otherwise, from the Haskell file)
+
+ghc -fno-warn-tabs Scanner.hs
 
 
+Commands to make the Parser:
+(If making directly from the Parser.y Happy file)
 
-Parser Commands make:
+happy --ghc Parser.y
+ghc Parser.hs
+
+(Otherwise, from the Haskell file)
+
+ghc Parser.hs
 
 
+Commands to compile the whole thing and link it all together:
+ghc Main.hs
 
 Special Directions:
-None
-
+Alex and Happy, tools included with the Glasgow Haskell Compiler Package, must already be installed before making the Scanner/Parser from their Alex and Happy files respectively.
 
 
