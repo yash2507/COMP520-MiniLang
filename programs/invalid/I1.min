@@ -1,0 +1,8 @@
+#comment 1 
+
+while x do {} done
+
+var x:float;
+var y:int;
+
+if x then y; else y; endif;

@@ -1,6 +1,7 @@
 {
 module Parser
 (
+ P,
  parse,
  pmain
 ) where
@@ -84,6 +85,8 @@ Term : Term '*' Factor  { Multiply $1 $3 }
 
 Factor : int { It $1 }
  | float { Flt $1 }
+ | '-' int { It (- $2) }
+ | '-' float { Flt (- $2) }
  | ID { Var $1 }
  | '(' Exp ')' { Expression $2 }
 
@@ -91,7 +94,8 @@ Factor : int { It $1 }
 {
 
 parseError :: [S_Tokens] -> a
-parseError k = error ("Parse Error starting at Token : " ++ (show k))
+parseError (k:kl) = error (show k)
+parseError _ = error ("Parse Error")
 
 data P = Program ([Declaration], [Statement])
  deriving Show

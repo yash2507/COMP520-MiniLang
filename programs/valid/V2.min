@@ -1,3 +1,18 @@
+# Computing the Factorial of a number :
+
 var x:int;
 var y:int;
-x = 21.03;
+var t1:int;
+var t2:int;
+read x;
+y = 1;
+t1 = x;
+if x then t2 = 1; else t2 = 1; endif
+while t1 do
+{
+t2 = t2 * y;
+y = y+1;
+t1 = x-y;
+} done
+t2 = t2 * x;
+print t2;

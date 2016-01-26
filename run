@@ -1,4 +1,3 @@
 #!/bin/sh
 
-./scanner.Alex < $1
-
+./Main < $1
