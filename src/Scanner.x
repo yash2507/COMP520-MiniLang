@@ -11,7 +11,8 @@ module Scanner
 
 $digitWo0 = [1-9] -- digits without Zero
 $digitW0 = [0-9]  -- digits with 0
-$alpha = [a-zA-Z] -- alphabetic characters
+$alpha = [a-zA-Z \_] -- alphabetic characters
+$stringChars = [a-zA-Z \_ \, \. \! \?]
 
 tokens :-
 
@@ -31,22 +32,21 @@ tokens :-
  done { \s -> T_Done }
  int { \s -> T_TypeInt }
  float { \s -> T_TypeFloat }
+ string { \s -> T_TypeString }
  $digitW0 { \s -> T_Int (read s) }
  $digitWo0 $digitW0+ { \s -> T_Int (read s) }
  [\.] $digitW0+ { \s -> T_Float (read ('0':s)) } -- For floats that are of form '. D+'
  $digitWo0 $digitW0* [\.] $digitW0* { \s -> T_Float (read (s++['0'])) } -- For floats that are of the form 'D+ . D*'
  0 [\.] $digitW0* { \s -> T_Float (read (s++['0'])) } -- For floats that are of the form '0. D*'
- [\"] .* [\"] { \s -> T_String s }
+ [\"] $stringChars* [\"] { \s -> T_String s }
  [\=] { \s -> T_Assignment }
  [\+] { \s -> T_Add }
  [\-] { \s -> T_Subtract }
  [\*] { \s -> T_Multiply }
  [\/] { \s -> T_Divide }
- [\{] { \s -> T_LBrace }
- [\}] { \s -> T_RBrace }
  [\(] { \s -> T_LParen }
  [\)] { \s -> T_RParen }
- $alpha [$alpha $digitW0 \_ \’]* { \s -> T_Identifier s }
+ $alpha [$alpha $digitW0 \’]* { \s -> T_Identifier s }
  . { \s -> S_Error s }
 
 {
@@ -58,8 +58,6 @@ data S_Tokens =
  T_Declaration |
  T_Assignment |
  T_Termination |
- T_LBrace |
- T_RBrace |
  T_LParen |
  T_RParen |
  T_Print |
@@ -70,6 +68,7 @@ data S_Tokens =
  T_Divide |
  T_TypeInt |
  T_TypeFloat |
+ T_TypeString |
  T_If |
  T_Then |
  T_Else |

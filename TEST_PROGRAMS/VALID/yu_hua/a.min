@@ -1,0 +1,22 @@
+# This is the first valid program.
+
+var x: int; # base number
+var y: int; # power number
+var res: int; 
+var s: string;
+
+x = 2;
+y = 3;
+res = 1;
+s = "program executed incorrectly!";
+
+while y do
+  res = res * x;
+  y = y - 1;
+done
+
+if res - 1 then
+  print res;
+else
+  print s;
+endif

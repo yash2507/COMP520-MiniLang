@@ -9,10 +9,9 @@ y = 1;
 t1 = x;
 if x then t2 = 1; else t2 = 1; endif
 while t1 do
-{
 t2 = t2 * y;
 y = y+1;
 t1 = x-y;
-} done
+done
 t2 = t2 * x;
 print t2;
