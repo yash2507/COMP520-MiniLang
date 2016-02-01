@@ -8,8 +8,8 @@ import Data.Either
 indent :: [String] -> [String]
 indent l = map (\s -> ("    " ++ s)) l
 
-prettyPrint :: P -> [String]
-prettyPrint (Program d s) = (prettyPrintD d) ++ (prettyPrintS s)
+prettyPrint :: P -> String
+prettyPrint (Program d s) = unlines $ (prettyPrintD d) ++ (prettyPrintS s)
 
 prettyPrintD :: [Declaration] -> [String]
 prettyPrintD (d1:ds) = [(prettyPrintDeclaration d1)] ++ (prettyPrintD ds)
@@ -22,20 +22,17 @@ prettyPrintDeclaration (Init varName 3) = ("var " ++ varName ++ ": string;")
 prettyPrintDeclaration (Init varName _) = ("Error PP01")
 
 prettyPrintS :: [Statement] -> [String]
-prettyPrintS (s1:ss) = [(prettyPrintUnline (prettyPrintStatement s1))] ++ (prettyPrintS ss)
+prettyPrintS (s1:ss) = (prettyPrintStatement s1) ++ (prettyPrintS ss)
 prettyPrintS [] = []
 
-prettyPrintUnline (Left u) = u
-prettyPrintUnline (Right v) = unlines $ v
-
-prettyPrintStatement :: Statement -> Either String [String]
-prettyPrintStatement (Eval varName expression) = (Left (varName ++ " = " ++ (prettyPrintExpression expression) ++ ";"))
-prettyPrintStatement (Pr varName) = (Left ("print " ++ varName ++ ";"))
-prettyPrintStatement (Re varName) = (Left ("read " ++ varName ++ ";"))
-prettyPrintStatement (PrS str) = (Left ("print \"" ++ str ++ "\";"))
-prettyPrintStatement (Wh f s) = Right (["while " ++ (prettyPrintFactor f) ++ " do"] ++ (indent (prettyPrintS s)) ++ ["done"])
-prettyPrintStatement (IfE f s1 []) = Right (["if " ++ (prettyPrintFactor f) ++ " then"] ++ (indent (prettyPrintS s1)) ++ ["endif"])
-prettyPrintStatement (IfE f s1 s2) = Right (["if " ++ (prettyPrintFactor f) ++ " then"] ++ (indent (prettyPrintS s1)) ++ ["else"] ++ (indent (prettyPrintS s2)) ++ ["endif"])
+prettyPrintStatement :: Statement -> [String]
+prettyPrintStatement (Eval varName expression) = [(varName ++ " = " ++ (prettyPrintExpression expression) ++ ";")]
+prettyPrintStatement (Pr varName) = [("print " ++ varName ++ ";")]
+prettyPrintStatement (Re varName) = [("read " ++ varName ++ ";")]
+prettyPrintStatement (PrS str) = [("print \"" ++ str ++ "\";")]
+prettyPrintStatement (Wh f s) = ["while " ++ (prettyPrintFactor f) ++ " do"] ++ (indent (prettyPrintS s)) ++ ["done"]
+prettyPrintStatement (IfE f s1 []) = ["if " ++ (prettyPrintFactor f) ++ " then"] ++ (indent (prettyPrintS s1)) ++ ["endif"]
+prettyPrintStatement (IfE f s1 s2) = ["if " ++ (prettyPrintFactor f) ++ " then"] ++ (indent (prettyPrintS s1)) ++ ["else"] ++ (indent (prettyPrintS s2)) ++ ["endif"]
 
 prettyPrintExpression :: Expr -> String
 prettyPrintExpression (Add e t) = (prettyPrintExpression e) ++ " + " ++ (prettyPrintTerm t)

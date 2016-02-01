@@ -15,7 +15,7 @@ weedScanErrors [] = []
 
 weed l = filter filterfn l
 
-final s = unlines $ prettyPrint (parse (scan s))
+final s = prettyPrint (parse (scan s))
 
 
 main = do
