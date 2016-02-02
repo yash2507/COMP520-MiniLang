@@ -1,15 +1,14 @@
-module PrettyPrinter (prettyPrint) where
+module PrettyPrinter (prettyPrint, indent) where
 
 import Parser
 import Numeric
 import Prelude
-import Data.Either
 
 indent :: [String] -> [String]
 indent l = map (\s -> ("    " ++ s)) l
 
 prettyPrint :: P -> String
-prettyPrint (Program d s) = unlines $ (prettyPrintD d) ++ (prettyPrintS s)
+prettyPrint (Program d s) = unlines $ ["# DECLARATIONS"] ++ (prettyPrintD d) ++ ["# STATEMENTS"] ++ (prettyPrintS s) ++ [""]
 
 prettyPrintD :: [Declaration] -> [String]
 prettyPrintD (d1:ds) = [(prettyPrintDeclaration d1)] ++ (prettyPrintD ds)
