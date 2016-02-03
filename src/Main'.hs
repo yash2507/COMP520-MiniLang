@@ -24,14 +24,17 @@ sp s = parse (scan s)
 sppp t = prettyPrint (sp t)
 
 main = do
- inputFN <- getContents
- inputFC <- readFile inputFN
- let (Program d s) = sp inputFC
- let fileNameCore = fileName inputFN
- writeFile (fileNameCore ++ ".pretty.min") (prettyPrint (Program d s))
- writeFile (fileNameCore ++ ".symbol.txt") (unlines $ map show (symbolTable d))
- if typeCheck (Program d s)
-  then writeFile (fileNameCore ++ ".c") (codeGenerate (renameVariables (Program d s)))
-  else error "Code Not Generated, Type Error."
+ inputC <- getContents
+ let t = sp inputC
+ let u = prettyPrint t
+ putStrLn u
+ putStrLn $ fileName "Yash.min"
+ putStrLn $ show (u == (sppp u))
+ putStrLn $ show $ typeCheck t
+ let v = (renameVariables t)
+ putStrLn $ codeGenerate v
+ --E.catch (putStrLn ("VALID: " ++(show (final s))))
+  --(\(E.ErrorCall e) -> putStrLn ("INVALID: Parse Error at "++ e))
+
 
 

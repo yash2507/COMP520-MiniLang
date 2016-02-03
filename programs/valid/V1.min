@@ -1,6 +1,7 @@
 var x:string;
 var y:int;
 var z:float;
+var z:int;
 x=-20;
 read y;
 y=x-17.18;print y;

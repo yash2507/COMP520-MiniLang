@@ -32,12 +32,35 @@ codeGenerateS ((Eval v e):ss) st = let z = (typeCheckS (Eval v e) st) in
     else if (z == StS)
      then (codeGenerateStr (Eval v e)) ++ (codeGenerateS ss st)
      else (codeGenerateS ss st)
-codeGenerateS ((Pr v):ss) st = ("printf(\"%d\", " ++ v ++ ");"):(codeGenerateS ss st)
-codeGenerateS ((Re v):ss) st = ("scanf(\"%d\", &" ++ v ++ ");"):(codeGenerateS ss st)
+codeGenerateS ((Pr v):ss) st = let z = (typeCheckS (Pr v) st) in
+ if (z == StI)
+  then ("printf(\"%d\", " ++ v ++ ");"):(codeGenerateS ss st)
+  else if (z == StF)
+   then ("printf(\"%f\", " ++ v ++ ");"):(codeGenerateS ss st)
+   else if (z == StS)
+    then ("printf(\"%s\", " ++ v ++ ");"):(codeGenerateS ss st)
+    else (codeGenerateS ss st)
+codeGenerateS ((Re v):ss) st = let z = (typeCheckS (Pr v) st) in
+ if (z == StI)
+  then ("scanf(\"%d\", &" ++ v ++ ");"):(codeGenerateS ss st)
+  else if (z == StF)
+   then ("scanf(\"%f\", &" ++ v ++ ");"):(codeGenerateS ss st)
+   else if (z == StS)
+    then ("scanf(\"%s\", " ++ v ++ ");"):(codeGenerateS ss st)
+    else (codeGenerateS ss st)
 codeGenerateS ((PrS s):ss) st = ("printf(\"" ++ s ++ "\");"):(codeGenerateS ss st)
-codeGenerateS ((Wh f s):ss) st = ("while ( " ++ (codeGenerateF f) ++ " )"):["{"] ++ (indent $ codeGenerateS s st) ++ ("}"):(codeGenerateS ss st)
-codeGenerateS ((IfE f s []):ss) st = ("if ( " ++ (codeGenerateF f) ++ " )"):["{"] ++ (indent $ codeGenerateS s st) ++ ("}"):(codeGenerateS ss st)
-codeGenerateS ((IfE f s1 s2):ss) st = ("if ( " ++ (codeGenerateF f) ++ " )"):["{"] ++ (indent $ codeGenerateS s1 st) ++ ["}", "else", "{"] ++ (indent $ codeGenerateS s2 st) ++ ("}"):(codeGenerateS ss st)
+codeGenerateS ((Wh f s):ss) st = let z = (typeCheckS (Wh f s) st) in
+ if (z == StV)
+  then ("while ( " ++ (codeGenerateF f) ++ " )"):["{"] ++ (indent $ codeGenerateS s st) ++ ("}"):(codeGenerateS ss st)
+  else (codeGenerateS ss st)
+codeGenerateS ((IfE f s []):ss) st = let z = (typeCheckS (IfE f s []) st) in
+ if (z == StV)
+  then ("if ( " ++ (codeGenerateF f) ++ " )"):["{"] ++ (indent $ codeGenerateS s st) ++ ("}"):(codeGenerateS ss st)
+  else (codeGenerateS ss st)
+codeGenerateS ((IfE f s1 s2):ss) st = let z = (typeCheckS (IfE f s1 s2) st) in
+ if (z == StV)
+  then ("if ( " ++ (codeGenerateF f) ++ " )"):["{"] ++ (indent $ codeGenerateS s1 st) ++ ["}", "else", "{"] ++ (indent $ codeGenerateS s2 st) ++ ("}"):(codeGenerateS ss st)
+  else (codeGenerateS ss st)
 codeGenerateS [] _ = []
 
 codeGenerateStr :: Statement -> [String]

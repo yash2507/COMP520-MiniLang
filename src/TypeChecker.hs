@@ -10,6 +10,7 @@ module TypeChecker
 ) where
 
 import Parser
+import Prelude
 import Data.List
 import Data.Maybe
 
@@ -19,10 +20,12 @@ data Symbol = TyInt String | TyFlt String | TyStr String | TyUnk String
 data StTy = StI | StF | StS | StV | StCI | StCF | StU
  deriving (Show, Eq)
 
-typeCheck :: P -> ([StTy], [Symbol])
+typeCheck :: P -> Bool
 typeCheck (Program d s) =
  let symbols = symbolTable d in
-  (typeCheckK s symbols, symbols)
+  if (duplicateInSym symbols)
+  then error "A variable was declared twice using the same identifier."
+  else weeded s symbols
 
 typeCheckK :: [Statement] -> [Symbol] -> [StTy]
 typeCheckK (s:ss) st = (typeCheckS s st):(typeCheckK ss st)
@@ -41,10 +44,12 @@ typeCheckS (Eval v e) st =
     else if ((k == TyFlt "") && (l == TyInt ""))
      then StCF
      else StU
-typeCheckS (Wh f sl) st = if ((typeCheckF f st) == TyInt "")
- then StV else StU
-typeCheckS (IfE f sl1 sl2) st = if ((typeCheckF f st) == TyInt "")
- then StV else StU
+typeCheckS (Wh f sl) st = if ((typeCheckF f st) == TyInt "") && (weeded sl st)
+ then StV
+ else StU
+typeCheckS (IfE f sl1 sl2) st = if ((typeCheckF f st) == TyInt "") && (weeded sl1 st) && (weeded sl2 st)
+ then StV
+ else StU
 typeCheckS (Pr v) st =
  let k = (symbolExists v st) in
   if (k == TyInt "")
@@ -64,6 +69,22 @@ typeCheckS (Re v) st =
      then StS
      else StU
 typeCheckS (PrS _) st = StV
+
+weeded :: [Statement] -> [Symbol] -> Bool
+weeded (s:ss) st = ((typeCheckS s st) /= StU) && (weeded ss st)
+weeded [] _ = True
+
+fn y (TyInt x) = x == y
+fn y (TyFlt x) = x == y
+fn y (TyStr x) = x == y
+fn y (TyUnk x) = x == y
+
+duplicateInSym :: [Symbol] -> Bool
+duplicateInSym ((TyInt x):xs) = (foldl (||) False (map (\u -> fn x u) xs)) || (duplicateInSym xs)
+duplicateInSym ((TyFlt x):xs) = (foldl (||) False (map (\u -> fn x u) xs)) || (duplicateInSym xs)
+duplicateInSym ((TyStr x):xs) = (foldl (||) False (map (\u -> fn x u) xs)) || (duplicateInSym xs)
+duplicateInSym ((TyUnk x):xs) = (foldl (||) False (map (\u -> fn x u) xs)) || (duplicateInSym xs)
+duplicateInSym [] = False
 
 symbolTable :: [Declaration] -> [Symbol]
 symbolTable (d:ds) = (symbolFromD d):(symbolTable ds)
