@@ -1,4 +1,0 @@
-if "x" 
-	print "hi";
-endif
-

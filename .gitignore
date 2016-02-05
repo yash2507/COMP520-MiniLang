@@ -2,4 +2,4 @@
 
 *.o
 *.hi
-
+TEST_PROGRAMS/*.min
