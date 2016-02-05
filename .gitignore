@@ -1,0 +1,5 @@
+#Ignores these types of files.
+
+*.o
+*.hi
+

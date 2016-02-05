@@ -1,7 +1,6 @@
 #!/bin/sh
 
 echo "$1\c" > temp.txt
-
 ./src/Main < temp.txt
-
 rm temp.txt
+

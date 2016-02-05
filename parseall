@@ -1,18 +1,17 @@
 #!/bin/sh
 
-cd src
-ghc Main.hs
-cd ..
+./make $1
 
 echo "\n"
-./src/Main < programs/valid/V1.min
+./run programs/valid/V1.min
 echo "\n"
-./src/Main < programs/valid/V2.min
-./src/Main < programs/invalid/I1.min
-./src/Main < programs/invalid/I2.min
-./src/Main < programs/invalid/I3.min
-./src/Main < programs/invalid/I4.min
-./src/Main < programs/invalid/I5.min
+./run programs/valid/V2.min
+echo "\n"
+./run programs/invalid/I1.min
+./run programs/invalid/I2.min
+./run programs/invalid/I3.min
+./run programs/invalid/I4.min
+./run programs/invalid/I5.min
 echo "\n"
 
 

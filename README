@@ -1,32 +1,11 @@
 Name     -  Yash Gupta
 ID       -  260574028
 
-Commmands to make the Scanner:
-(If making directly from the Scanner.x Alex file)
+Commmands to make the whole project:
+./make
 
-alex --ghc Scanner.x 
-ghc -fno-warn-tabs Scanner.hs
+The unmake script just removes all the -.o and -.hi files that are ununsed and the Main executable.
 
-(Otherwise, from the Haskell file)
-
-ghc -fno-warn-tabs Scanner.hs
-
-
-Commands to make the Parser:
-(If making directly from the Parser.y Happy file)
-
-happy --ghc Parser.y
-ghc Parser.hs
-
-(Otherwise, from the Haskell file)
-
-ghc Parser.hs
-
-
-Commands to compile the whole thing and link it all together:
-ghc Main.hs
-
-Special Directions:
-Alex and Happy, tools included with the Glasgow Haskell Compiler Package, must already be installed before making the Scanner/Parser from their Alex and Happy files respectively.
-
+Commands to run the project after making it:
+./run filename.min
 

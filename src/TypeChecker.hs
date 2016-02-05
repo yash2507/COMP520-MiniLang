@@ -40,7 +40,7 @@ typeCheckS (Eval v e) st =
   else if (k == l)
    then StV
    else if ((k == TyInt "") && (l == TyFlt ""))
-    then StCI
+    then StU
     else if ((k == TyFlt "") && (l == TyInt ""))
      then StCF
      else StU

@@ -25,8 +25,6 @@ codeGenerateS :: [Statement] -> [Symbol] -> [String]
 codeGenerateS ((Eval v e):ss) st = let z = (typeCheckS (Eval v e) st) in
  if (z == StV)
   then (v ++ " = " ++ (codeGenerateE e) ++ " ;"):(codeGenerateS ss st)
-  else if (z == StCI)
-   then ( v ++ " = (int) ( " ++ (codeGenerateE e) ++ " ) ;"):(codeGenerateS ss st)
    else if (z == StCF)
     then ( v ++ " = (float) ( " ++ (codeGenerateE e) ++ " ) ;"):(codeGenerateS ss st)
     else if (z == StS)
